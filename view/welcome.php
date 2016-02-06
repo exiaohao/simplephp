@@ -7,12 +7,15 @@
  */
 
 ?>
-
-<html>
+<!DOCTYPE html>
+<html lang="zh-cn">
 <head>
-    <title>welcome</title>
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <title></title>
 </head>
 <body>
-welcome!
-</body>
-</html>
+
+<div></div>
+
+<script src="/static/js/jquery-1.10.2.min.js"></script>
+<script src="/static/bootstrap/js/bootstrap.min.js"></script>

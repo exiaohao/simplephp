@@ -10,6 +10,8 @@
 define('DEBUG', true);
 //DEFAULT_HOMEPAGE
 define('DEFAULT_HOMEPAGE', 'welcome');
+//SITE_NAME
+define('SITE_NAME', '嘉兴学院三位一体招生');
 
 
 require 'class_db.php';
