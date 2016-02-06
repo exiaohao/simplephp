@@ -18,29 +18,36 @@ require 'class_db.php';
 
 class common extends db
 {
+    var $global_error;
     function __construct()
     {
         parent::__construct();
+        $this->global_error = $this->callClass('global_error');
     }
-
+    /*
+     * Call Class
+     */
     function callClass($class_to_call)
     {
         return new $class_to_call();
     }
-
+    /*
+     * Load Page From '/view/{$page}.php'
+     */
     function load_page($page)
     {
-        $page_path = __DIR__.'/../view/'.$page.'.php';
-        $fp = fopen($page_path, 'r');
-        if($fp)
+        if(empty($page))
         {
-            require $page_path;
+            $this->global_error->show_entire(404);
         }
-        else
-        {
-            $global_error = $this->callClass('global_error');
-            $global_error->show_entire(404);
+        else {
+            $page_path = __DIR__ . "/../view/{$page}.php";
+            $fp = fopen($page_path, 'r');
+            if ($fp) {
+                require $page_path;
+            } else {
+                $this->global_error->show_entire(404);
+            }
         }
-
     }
 }
