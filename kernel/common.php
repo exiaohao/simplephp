@@ -8,6 +8,8 @@
  */
 
 define('DEBUG', true);
+//DEFAULT_HOMEPAGE
+define('DEFAULT_HOMEPAGE', 'welcome');
 
 
 require 'class_db.php';
