@@ -1,0 +1,14 @@
+.navbar-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    margin-top: 20px;
+    margin-bottom: -90px;
+}
+
+.navbar {
+    margin-bottom: 20px;
+    overflow: visible;
+}
