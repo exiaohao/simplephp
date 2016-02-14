@@ -12,8 +12,8 @@
     <meta charset="utf-8">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link rel="stylesheet" href="/static/css/header.css" rel="stylesheet" media="screen">
+    <!--link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen"-->
+    <link rel="stylesheet" href="/css_loader/get/%2Fcss%2Fglobal.css/%2Fcss%2Fheader.css/%2Fbootstrap%2Fcss%2Fbootstrap.css" rel="stylesheet" media="screen">
     <title>首页 - <?=SITE_NAME; ?></title>
 </head>
 <body>
@@ -29,26 +29,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="brand" href="#">Project name</a>
+                <a class="brand" href="#"><?=SITE_NAME; ?></a>
                 <!-- Responsive Navbar Part 2: Place all navbar contents you want collapsed withing .navbar-collapse.collapse. -->
-                <div class="nav-collapse collapse">
+                <div class="nav-collapse collapse pull-right">
                     <ul class="nav">
-                        <li class="active"><a href="#">Home</a></li>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                        <!-- Read about Bootstrap dropdowns at http://twbs.github.com/bootstrap/javascript.html#dropdowns -->
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#">Action</a></li>
-                                <li><a href="#">Another action</a></li>
-                                <li><a href="#">Something else here</a></li>
-                                <li class="divider"></li>
-                                <li class="nav-header">Nav header</li>
-                                <li><a href="#">Separated link</a></li>
-                                <li><a href="#">One more separated link</a></li>
-                            </ul>
-                        </li>
+                        <li class="active"><a href="#">首页</a></li>
+                        <li><a href="/intro">招生简章</a></li>
+                        <a class="btn btn-success" href="/register">立即报名</a>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div><!-- /.navbar-inner -->

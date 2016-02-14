@@ -12,17 +12,23 @@ define('DEBUG', true);
 define('DEFAULT_HOMEPAGE', 'welcome');
 //SITE_NAME
 define('SITE_NAME', '嘉兴学院三位一体招生');
-
+//TTL_LOGINATTEMPT
+define('TTL_LOGIN_ATTEMPT', 90);
+//TTL_REGISTER_ATTEMPT
+define('TTL_REGISTER_ATTEMPT', 1200);
 
 require 'class_db.php';
+require 'utils.php';
 
 class common extends db
 {
     var $global_error;
+    var $utils;
     function __construct()
     {
         parent::__construct();
         $this->global_error = $this->callClass('global_error');
+        $this->utils = $this->callClass('utils');
     }
     /*
      * Call Class
@@ -34,7 +40,7 @@ class common extends db
     /*
      * Load Page From '/view/{$page}.php'
      */
-    function load_page($page)
+    function load_page($page, $argv = array())
     {
         if(empty($page))
         {
@@ -49,5 +55,20 @@ class common extends db
                 $this->global_error->show_entire(404);
             }
         }
+    }
+    /*
+     * 创建密码hash
+     * 方法 md5(password+salt)
+     */
+    function creat_pass_hash($pass, $salt = '')
+    {
+        return md5($pass.$salt);
+    }
+    /*
+     * 检查用户的密码
+     */
+    function check_pass_hash($account_name, $password)
+    {
+
     }
 }

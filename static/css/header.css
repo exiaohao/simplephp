@@ -1,3 +1,7 @@
+.navbar {
+    margin-bottom: 20px;
+    overflow: visible;
+}
 .navbar-wrapper {
     position: absolute;
     top: 0;
@@ -6,9 +10,4 @@
     z-index: 10;
     margin-top: 20px;
     margin-bottom: -90px;
-}
-
-.navbar {
-    margin-bottom: 20px;
-    overflow: visible;
 }
