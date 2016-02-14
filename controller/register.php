@@ -6,6 +6,7 @@
  * Date: 16/2/7
  * Time: 上午12:58
  */
+session_start();
 class register extends common
 {
     var $ar;
@@ -22,7 +23,7 @@ class register extends common
         $session_key = 'register_session_'.$uhash;
         $this->redis->SET($session_key, $uip);
         $this->redis->EXPIRE($session_key, TTL_REGISTER_ATTEMPT);
-
+        $_SESSION['token'] = $uhash;
         $this->load_page('register', array('uhash'=>$uhash));
     }
     /*
@@ -40,11 +41,12 @@ class register extends common
     }
     /*
      * 读取学校信息
+     * 返回json
      */
     function get_school_detail()
     {
         $telcode = is_numeric($this->ar[0])?$this->ar[0]:$this->global_error->show_entire(405);
-        header('application/json; charset=utf-8');
+        header('Content-Type:application/json; charset=utf-8');
         $sql = "SELECT * FROM  `school_list` WHERE  `telcode` LIKE '{$telcode}' ORDER BY  `school_list`.`postcode` ASC;";
         $items = $this->mysql->query($sql);
         if($items->num_rows > 0)
@@ -69,9 +71,34 @@ class register extends common
 
     /*
      * 检查用户名(身份证号码)是否被注册
-     * TODO
+     * 返回json
      */
+    function check_idcard()
+    {
+        header('Content-Type:application/json; charset=utf-8');
+        $user_token = $_SESSION['token'];
+        if($user_token == '')
+        {
+            die(json_encode(array('status'=>-1, 'msg'=>'非法用户')));
+        }
 
+        if(!$this->utils->request_freq_protect('register_CHK_IDCARD', $user_token, TTL_REGISTER_CHK_IDCARD, FREQ_REGISTER_CHK_IDCARD))
+            die(json_encode(array('status'=>-1, 'msg'=>'您的请求过快')));
+
+        $idcard = $this->ar[0];
+        if($this->utils->checkIdCard($idcard))
+        {
+            $sql_check = $this->mysql->query('SELECT  `idcard` FROM `student_basicinfo` WHERE `idcard` LIKE \''.$idcard.'\' LIMIT 1');
+            if($sql_check->num_rows == 0)
+                die(json_encode(array('status'=>0, 'msg'=>'身份证合法')));
+            else
+                die(json_encode(array('status'=>-1, 'msg'=>'此身份证号码已经注册过')));
+        }
+        else
+        {
+            die(json_encode(array('status'=>-1, 'msg'=>'身份证号码不合法')));
+        }
+    }
     /*
      * 处理注册SQL
      */
@@ -79,9 +106,16 @@ class register extends common
     {
         $pass_salt = substr(md5(time()), 0, 6);
         $pass_hash = $this->creat_pass_hash($data_arr['password'], $pass_salt);
+
+        $html_text_format = '<h2>%s同学,恭喜你已经成功在嘉兴学院三位一体招生系统注册</h2><p>您的登录账户名为:%s</p><p>您的密码为:%s</p><p>请牢记您的账户和密码<br />如有问题,请联系 0573-83640000 或邮箱 bkzs@admission.zjxu.edu.cn<br />您可以直接回复本邮件获得帮助</p>';
+        /*
+         * TODO:身份证遇到X大写
+         * 校验身份证合法性
+         */
+
         $sql = "INSERT INTO `student_basicinfo`(`idcard`, `password`, `password_salt`, `name`, `stu_origin`,
                  `school_id`, `email`, `mobile`, `homephone`, `status`) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');";
-        $fsql = sprintf($sql, $data_arr['idcard'], $pass_hash, $pass_salt, $data_arr['realname'],
+        $fsql = sprintf($sql, strtoupper($data_arr['idcard']), $pass_hash, $pass_salt, $data_arr['realname'],
             $data_arr['stu_origin'], $data_arr['stu_school'], $data_arr['email'], $data_arr['mobilephone'],
             $data_arr['homephone'], $data_arr['status']);
 
@@ -91,13 +125,27 @@ class register extends common
             /*
              * 注册成功,发送邮件
              */
+            if($this->utils->send_mail($data_arr['email'], $data_arr['realname'], '嘉兴学院三位一体招生系统 - 学生注册成功', sprintf($html_text_format, $data_arr['realname'], $data_arr['idcard'], $data_arr['password'])))
+            {
+                /*
+                 * 发邮件成功,跳转到登录
+                 */
+            }
+            else
+            {
+                /*
+                 * 发邮件失败,记录事件
+                 * TODO
+                 */
+            }
+            header('Location:/account#!/type/register_successful');
         }
         else
         {
             /*
              * 注册失败,返回错误
              */
-            $this->global_error->register_error;
+            echo $this->global_error->register_error;
         }
     }
 
@@ -125,8 +173,10 @@ class register extends common
             /*
              * 检查配置,是否现在在允许注册时间内
              */
-            if($this->check_register_enbaled())
+            if($this->check_register_enbaled()) {
+                echo 'GO REG SQL';
                 $this->register_sql($_POST);
+            }
             else
                 $this->global_error->bad_request($this->global_error->register_disabled);
 

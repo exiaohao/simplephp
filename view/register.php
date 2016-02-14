@@ -150,7 +150,20 @@ $(document).ready(function() {
   });
 });
 $(function(){
-
+  $('#idcard').change(function(){
+    $.ajax({
+      url: '/register/check_idcard/'+$(this).val(),
+      success: function(data){
+        if(data.status === 0)
+        {
+        }
+        else {
+          $('#idcard').val(data.msg)
+        }
+      },
+      dataType: 'json'
+    });
+  })
   $('#stuorig').change(function(){
     $('#homephone').val($(this).find('option:selected').val()+'-');
     $.ajax({

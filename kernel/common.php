@@ -16,6 +16,10 @@ define('SITE_NAME', '嘉兴学院三位一体招生');
 define('TTL_LOGIN_ATTEMPT', 90);
 //TTL_REGISTER_ATTEMPT
 define('TTL_REGISTER_ATTEMPT', 1200);
+//TTL_REGISTER_CHECK_IDCARD_FREQUENCY
+define('TTL_REGISTER_CHK_IDCARD', 15);
+//FREQ_REGISTER_CHK_IDCARD
+define('FREQ_REGISTER_CHK_IDCARD', 4);
 
 require 'class_db.php';
 require 'utils.php';
@@ -71,4 +75,8 @@ class common extends db
     {
 
     }
+
+    /*
+     *发送邮件
+     */
 }
