@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 /**
  * Created by PhpStorm.
  * User: songhao
@@ -10,6 +10,12 @@ class welcome extends common
 {
     function index()
     {
-        $this->load_page('welcome');
+        $user_info = $this->is_loggedin();
+        if(!$user_info)
+            $this->load_page('welcome');
+        else
+        {
+            $this->load_page('welcome', array('username' =>$user_info['name']));
+        }
     }
 }

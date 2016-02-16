@@ -155,7 +155,7 @@ class register extends common
     function do_register()
     {
         $user_token = $_POST['token'];
-        if($this->redis->TTL('register_session_'.$user_token) > -2)
+        if($this->redis->TTL('register_session_'.$user_token) > -1)
         {
             $required_fields = array('idcard', 'password', 'retupe_password', 'realname', 'stu_origin', 'stu_school',
                 'email', 'mobilephone', 'homephone', 'token');

@@ -12,6 +12,7 @@ class global_error
     var $filed_not_full = '<p>您的表单有未填的项目</p><p><a class="btn btn-info" href="javascript:history.back()">返回</a></p>';
     var $register_error = '<p>注册过程中发生错误,如有问题请联系管理员</p>';
     var $register_disabled = '<h3>招生尚未开始/已经结束</h3><p>当前不允许注册新用户</p>';
+    var $bad_login_attempt = '<h3>错误的登录请求</h3><p>系统收到了非法的登录请求,如果您是正常操作,请<a class="btn btn-info" href="/account">返回</a>重试</p>';
     function show_entire($error_code = 1)
     {
         /*

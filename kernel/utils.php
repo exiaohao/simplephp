@@ -9,6 +9,18 @@
 class utils extends db
 {
     /*
+     * Creat UUID
+     */
+    function create_uuid($prefix = ""){    //可以指定前缀
+        $str = md5(uniqid(mt_rand(), true));
+        $uuid  = substr($str,0,8) . '-';
+        $uuid .= substr($str,8,4) . '-';
+        $uuid .= substr($str,12,4) . '-';
+        $uuid .= substr($str,16,4) . '-';
+        $uuid .= substr($str,20,12);
+        return $prefix . $uuid;
+    }
+    /*
      * 获取客户端IP
      */
     var $Mail;
@@ -88,6 +100,7 @@ class utils extends db
         if(strlen($idcard)!=18){
             return false;
         }
+        $idcard = strtoupper($idcard);
         // 取出本体码
         $idcard_base = substr($idcard, 0, 17);
         // 取出校验码

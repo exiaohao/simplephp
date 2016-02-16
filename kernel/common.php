@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 /**
  * Created by PhpStorm.
  * User: songhao
@@ -20,6 +20,12 @@ define('TTL_REGISTER_ATTEMPT', 1200);
 define('TTL_REGISTER_CHK_IDCARD', 15);
 //FREQ_REGISTER_CHK_IDCARD
 define('FREQ_REGISTER_CHK_IDCARD', 4);
+//TTL_LOGIN_USER
+define('TTL_LOGIN_USER', 3600);
+
+
+
+define('USER_IS_LOGIN', 1);
 
 require 'class_db.php';
 require 'utils.php';
@@ -71,12 +77,34 @@ class common extends db
     /*
      * 检查用户的密码
      */
-    function check_pass_hash($account_name, $password)
+    function check_pass_hash($pass_origin, $passhash, $salt)
     {
-
+        if( md5($pass_origin.$salt) == $passhash ) return true;
+        else return false;
     }
 
     /*
-     *发送邮件
+     * 检查用户已经登录?
+     * 登录了返回用户信息
      */
+    function is_loggedin()
+    {
+        if ($_SESSION['valid'] == USER_IS_LOGIN)
+        {
+            if($this->redis->TTL($_SESSION['user_token']) > 0 && $_SESSION['user_id'] > 0)
+            {
+                $user_info = $this->mysql->query('SELECT * FROM `student_basicinfo` WHERE  `id` = '.$_SESSION['user_id'].' LIMIT 0,1;');
+                if($user_info->num_rows > 0)
+                    return $user_info->fetch_assoc();
+                else {
+                    unset($_SESSION['valid']);
+                    return false;
+                }
+            }
+            else {
+                unset($_SESSION['valid']);
+                return false;
+            }
+        }
+    }
 }
